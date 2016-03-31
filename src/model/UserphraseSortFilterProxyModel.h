@@ -41,6 +41,7 @@ public:
     }
 
     const Userphrase *getUserphrase(const QModelIndex& idx);
+    const Statistics *getStatistics();
 
 public slots:
     void add(std::shared_ptr<QString> phrase, std::shared_ptr<QString> bopomofo);

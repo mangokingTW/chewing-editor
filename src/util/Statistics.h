@@ -1,4 +1,3 @@
-
 /*
  * chewing-editor: Chewing userphrase editor
  * Copyright (C) 2014 Chewing Development Team
@@ -20,26 +19,20 @@
 
 #pragma once
 
-#include <memory>
-#include <QDialog>
-#include "Statistics.h"
+#include <QString>
+#include <QVector>
 
-namespace Ui {
-    class StatisticsDialog;
-}
-
-class StatisticsDialog final: public QDialog
-{
-    Q_OBJECT
-
+class Statistics final {
 public:
-    explicit StatisticsDialog(QWidget *parent = 0);
-    StatisticsDialog(const StatisticsDialog&) = delete;
-    StatisticsDialog& operator=(const StatisticsDialog&) = delete;
-    ~StatisticsDialog(); // = default;
-    
-    void plot(const Statistics *statistics);
-private:
-    void setupConnect();
-    std::unique_ptr<Ui::StatisticsDialog> ui_;
+    Statistics();
+    Statistics(const Statistics&) = default;
+    Statistics& operator=(const Statistics&) = default;
+    ~Statistics() = default;
+    void clear();
+
+    QVector<QString> phrase_vec;
+    QVector<QString> bopomofo_vec;
+    QVector<int> orig_freq_vec;
+    QVector<int> max_freq_vec;
+    QVector<int> user_freq_vec;
 };

@@ -84,6 +84,13 @@ void UserphraseView::addPhrase(int result)
     emit model()->add(phrase, bopomofo);
 }
 
+void UserphraseView::plotStatistics()
+{
+    const Statistics *statistics = model()->getStatistics();
+    qDebug() << "Plotting chart";
+    StatisticsDialog_->plot(statistics);
+}
+
 void UserphraseView::remove()
 {
     auto selection = selectionModel();

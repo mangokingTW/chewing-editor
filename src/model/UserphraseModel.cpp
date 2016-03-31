@@ -156,7 +156,7 @@ void UserphraseModel::refresh()
     emit refreshCompleted(userphrase_.size());
 }
 
-void UserphraseModel::statistics()
+void UserphraseModel::doStatistics()
 {
     std::vector<char> phrase;
     unsigned int phrase_len;
@@ -168,6 +168,8 @@ void UserphraseModel::statistics()
     int orig_freq = 0;
     int max_freq = 0;
     int user_freq = 0;
+
+    statistics_.clear();
 
     chewing_userphrase_enumerate(ctx_.get());
     while (chewing_userphrase_has_next(ctx_.get(), &phrase_len, &bopomofo_len)) {
@@ -196,8 +198,15 @@ void UserphraseModel::statistics()
         }
 
         qDebug() << "Get frequency: " << orig_freq << max_freq << user_freq;
+
+        statistics_.phrase_vec << QString::fromUtf8(&phrase[0]);
+        statistics_.bopomofo_vec << QString::fromUtf8(&bopomofo[0]);
+        statistics_.orig_freq_vec << orig_freq;
+        statistics_.max_freq_vec << max_freq;
+        statistics_.user_freq_vec << user_freq;
     }
 
+    emit statisticsCompleted(statistics_.orig_freq_vec.size());
 }
 
 void UserphraseModel::add(std::shared_ptr<QString> phrase, std::shared_ptr<QString> bopomofo)
@@ -261,4 +270,9 @@ void UserphraseModel::add(const QString &phrase, const QString &bopomofo)
 const Userphrase *UserphraseModel::getUserphrase(const QModelIndex& idx)
 {
     return &userphrase_[idx.row()];
+}
+
+const Statistics *UserphraseModel::getStatistics()
+{
+    return &statistics_;
 }

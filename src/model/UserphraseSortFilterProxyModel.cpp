@@ -53,3 +53,8 @@ const Userphrase *UserphraseSortFilterProxyModel::getUserphrase(const QModelInde
 {
     return sourceModel()->getUserphrase(mapToSource(idx));
 }
+
+const Statistics *UserphraseSortFilterProxyModel::getStatistics()
+{
+    return sourceModel()->getStatistics();
+}

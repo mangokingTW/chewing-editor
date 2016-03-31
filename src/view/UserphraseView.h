@@ -43,6 +43,7 @@ public slots:
     void showModifyUserphraseDialog();
     void showStatisticsphraseDialog();
     void addPhrase(int result);
+    void plotStatistics();
     void remove();
     void setFilterString(const QString& text);
     void showContextMenu(const QPoint& point);

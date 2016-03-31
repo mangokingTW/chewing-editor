@@ -26,6 +26,7 @@
 
 #include <chewing.h>
 
+#include "Statistics.h"
 #include "Userphrase.h"
 #include "UserphraseExporter.h"
 #include "UserphraseImporter.h"
@@ -44,6 +45,7 @@ public:
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
     const Userphrase *getUserphrase(const QModelIndex& idx);
+    const Statistics *getStatistics();
 
 signals:
     void importCompleted(
@@ -58,6 +60,7 @@ signals:
     void addNewPhraseCompleted(const Userphrase& userphrase);
     void removePhraseCompleted(size_t count);
     void refreshCompleted(size_t count);
+    void statisticsCompleted(size_t count);
 
 public slots:
     void refresh();
@@ -65,11 +68,12 @@ public slots:
     void importUserphrase(std::shared_ptr<UserphraseImporter> importer);
     void exportUserphrase(std::shared_ptr<UserphraseExporter> exporter);
     void remove(QModelIndexList indexList);
-    void statistics();
+    void doStatistics();
 
 private:
     void add(const QString &phrase, const QString &bopomofo);
 
     std::unique_ptr<ChewingContext, void (*)(ChewingContext*)> ctx_;
     UserphraseSet userphrase_;
+    Statistics statistics_;
 };

@@ -209,19 +209,15 @@ void ChewingEditor::setupRefresh()
 void ChewingEditor::setupStatis()
 {
     connect(
-        ui_.get()->statisButton, SIGNAL(pressed()),
+        ui_.get()->statisButton, SIGNAL(clicked()),
         ui_.get()->userphraseView, SLOT(showStatisticsphraseDialog())
     );
-
     connect(
-        ui_.get()->statisButton, SIGNAL(pressed()),
-        model_, SLOT(statistics())
+        model_, SIGNAL(statisticsCompleted(size_t)),
+        ui_.get()->userphraseView, SLOT(plotStatistics())
     );
-
-    connect(
-        model_, SIGNAL(addNewPhraseCompleted(const Userphrase&)),
-        ui_.get()->notification, SLOT(notifyAddNewPhraseCompleted(const Userphrase&))
-    );
+    emit model_->doStatistics();
+    //emit ui_.get()->userphraseView->plotStatistics();
 }
 
 void ChewingEditor::setupFilter()

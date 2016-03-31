@@ -27,7 +27,6 @@ StatisticsDialog::StatisticsDialog(QWidget *parent)
     ,ui_{new Ui::StatisticsDialog}
 {
     ui_.get()->setupUi(this);
-    setupChart();
     setupConnect();
 }
 
@@ -39,7 +38,7 @@ void StatisticsDialog::setupConnect()
 {
     connect(
         ui_.get()->buttonBox, SIGNAL(accepted()),
-        this, SLOT(accept())
+        this, SLOT(setupChart())
     );
 
     connect(
@@ -48,13 +47,21 @@ void StatisticsDialog::setupConnect()
     );
 }
 
-void StatisticsDialog::setupChart()
+void StatisticsDialog::plot(const Statistics* statistics)
 {
-insertData("安安","a",1,2,3);
-insertData("你好","b",1,2,3);
-insertData("謝謝","c",1,2,3);
-insertData("運動員","d",1,2,3);
-insertData("喔","e",1,2,3);
+QVector<QString> phrase_vec(statistics->phrase_vec);
+QVector<QString> bopomofo_vec(statistics->bopomofo_vec);
+QVector<double> orig_freq_vec;
+QVector<double> max_freq_vec;
+QVector<double> user_freq_vec;
+
+for(int i = 0 ; i < statistics->orig_freq_vec.size() ; i++)
+{
+    orig_freq_vec << statistics->orig_freq_vec[i];
+    max_freq_vec << statistics->max_freq_vec[i];
+    user_freq_vec << statistics->user_freq_vec[i];
+}
+
 QCustomPlot *customPlot = ui_->customPlot;
 // create empty bar chart objects:
 QCPBars *user_freq_bar = new QCPBars(customPlot->xAxis, customPlot->yAxis);
@@ -93,7 +100,7 @@ customPlot->xAxis->setAutoTicks(false);
 customPlot->xAxis->setAutoTickLabels(false);
 customPlot->xAxis->setTickVector(ticks);
 //customPlot->xAxis->setTickVectorLabels(labels);
-customPlot->xAxis->setTickVectorLabels(phrase_data);
+customPlot->xAxis->setTickVectorLabels(phrase_vec);
 customPlot->xAxis->setTickLabelRotation(60);
 customPlot->xAxis->setSubTickCount(0);
 customPlot->xAxis->setTickLength(0, 4);
@@ -112,9 +119,9 @@ customPlot->yAxis->grid()->setPen(gridPen);
 gridPen.setStyle(Qt::DotLine);
 customPlot->yAxis->grid()->setSubGridPen(gridPen);
  
-orig_freq_bar->setData(ticks, orig_freq_data);
-max_freq_bar->setData(ticks, max_freq_data);
-user_freq_bar->setData(ticks, user_freq_data);
+orig_freq_bar->setData(ticks, orig_freq_vec);
+max_freq_bar->setData(ticks, max_freq_vec);
+user_freq_bar->setData(ticks, user_freq_vec);
  
 // setup legend:
 customPlot->legend->setVisible(true);
@@ -127,14 +134,4 @@ QFont legendFont = font();
 legendFont.setPointSize(10);
 customPlot->legend->setFont(legendFont);
 customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
-}
-
-int StatisticsDialog::insertData(QString phrase, QString bopomofo, int orig_freq, int max_freq, int user_freq)
-{
-    phrase_data << phrase;
-    bopomofo_data << bopomofo;
-    orig_freq_data << orig_freq;
-    max_freq_data << max_freq;
-    user_freq_data << user_freq;
-    return 1;
 }
