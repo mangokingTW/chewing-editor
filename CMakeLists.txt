@@ -170,12 +170,14 @@ file(GLOB chewing-editor_src
     ${PROJECT_SOURCE_DIR}/src/view/*
     ${ui}
 )
+find_package(Qt5PrintSupport REQUIRED)
 add_executable(chewing-editor WIN32 ${chewing-editor_src} ${qt_resources} ${PROJECT_SOURCE_DIR}/rc/chewing-editor.rc) # on Windows, remove "WIN32" for a console window
 target_link_libraries(chewing-editor
     ${CHEWING_LIBRARIES}
     exporter
     importer
     util
+    Qt5::PrintSupport
 )
 if(MSVC)
     target_link_libraries(chewing-editor  # append libraries

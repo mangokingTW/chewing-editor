@@ -156,6 +156,50 @@ void UserphraseModel::refresh()
     emit refreshCompleted(userphrase_.size());
 }
 
+void UserphraseModel::statistics()
+{
+    std::vector<char> phrase;
+    unsigned int phrase_len;
+
+    std::vector<char> bopomofo;
+    unsigned int bopomofo_len;
+
+    int ret;
+    int orig_freq = 0;
+    int max_freq = 0;
+    int user_freq = 0;
+
+    chewing_userphrase_enumerate(ctx_.get());
+    while (chewing_userphrase_has_next(ctx_.get(), &phrase_len, &bopomofo_len)) {
+       
+        phrase.resize(phrase_len);
+        bopomofo.resize(bopomofo_len);
+
+        ret = chewing_userphrase_get(ctx_.get(),
+            &phrase[0], phrase.size(),
+            &bopomofo[0], bopomofo.size());
+        if (ret == -1) {
+            qWarning() << "chewing_userphrase_get() returns" << ret;
+            continue;
+        }
+        
+        qDebug() << "Get userphrase:" << &phrase[0] << &bopomofo[0];
+        
+        ret = chewing_userphrase_get_freq(ctx_.get(),
+            &phrase[0],
+            &bopomofo[0], bopomofo.size(),
+            &orig_freq, &max_freq, &user_freq);
+        
+        if (ret == -1) {
+            qWarning() << "chewing_userphrase_get_freq() returns" << ret;
+            continue;
+        }
+
+        qDebug() << "Get frequency: " << orig_freq << max_freq << user_freq;
+    }
+
+}
+
 void UserphraseModel::add(std::shared_ptr<QString> phrase, std::shared_ptr<QString> bopomofo)
 {
     add(*phrase.get(), *bopomofo.get());

@@ -44,6 +44,7 @@ ChewingEditor::ChewingEditor(QWidget *parent)
     setupAdd();
     setupRemove();
     setupRefresh();
+    setupStatis();
     setupFilter();
     setupAboutWidget();
 
@@ -203,6 +204,24 @@ void ChewingEditor::setupRefresh()
     );
 
     emit model_->refresh();
+}
+
+void ChewingEditor::setupStatis()
+{
+    connect(
+        ui_.get()->statisButton, SIGNAL(pressed()),
+        ui_.get()->userphraseView, SLOT(showStatisticsphraseDialog())
+    );
+
+    connect(
+        ui_.get()->statisButton, SIGNAL(pressed()),
+        model_, SLOT(statistics())
+    );
+
+    connect(
+        model_, SIGNAL(addNewPhraseCompleted(const Userphrase&)),
+        ui_.get()->notification, SLOT(notifyAddNewPhraseCompleted(const Userphrase&))
+    );
 }
 
 void ChewingEditor::setupFilter()

@@ -43,16 +43,23 @@
      </widget>
     </item>
     <item row="0" column="3">
+     <widget class="QPushButton" name="statisButton">
+      <property name="text">
+       <string>Statistics</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="4">
      <widget class="QLineEdit" name="userphraseFilter">
       <property name="placeholderText">
        <string>Search</string>
       </property>
      </widget>
     </item>
-    <item row="1" column="0" colspan="4">
+    <item row="1" column="0" colspan="5">
      <widget class="Notification" name="notification"/>
     </item>
-    <item row="2" column="0" colspan="4">
+    <item row="2" column="0" colspan="5">
      <widget class="UserphraseView" name="userphraseView">
       <property name="selectionMode">
        <enum>QAbstractItemView::ExtendedSelection</enum>

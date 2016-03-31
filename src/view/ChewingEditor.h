@@ -59,6 +59,7 @@ private:
     void setupAdd();
     void setupRemove();
     void setupRefresh();
+    void setupStatis();
     void setupFilter();
     void setupAboutWidget();
     void importUserphrase(const QString& file);

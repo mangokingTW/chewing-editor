@@ -22,6 +22,7 @@
 #include <QListView>
 
 #include "UserphraseDialog.h"
+#include "StatisticsDialog.h"
 #include "UserphraseSortFilterProxyModel.h"
 #include "UserphraseViewMenu.h"
 
@@ -40,6 +41,7 @@ public:
 public slots:
     void showAddUserphraseDialog();
     void showModifyUserphraseDialog();
+    void showStatisticsphraseDialog();
     void addPhrase(int result);
     void remove();
     void setFilterString(const QString& text);
@@ -61,6 +63,7 @@ private:
     void setupAddUserphraseDialog();
 
     UserphraseDialog *UserphraseDialog_;
+    StatisticsDialog *StatisticsDialog_;
     UserphraseViewMenu *menu_;
 
     bool dialogType_;

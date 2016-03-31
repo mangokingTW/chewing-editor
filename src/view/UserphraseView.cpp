@@ -25,6 +25,7 @@
 UserphraseView::UserphraseView(QWidget *parent)
     :QListView{parent}
     ,UserphraseDialog_{new UserphraseDialog{this}}
+    ,StatisticsDialog_{new StatisticsDialog{this}}
     ,menu_(new UserphraseViewMenu{this})
 {
     setupContextMenu();
@@ -57,6 +58,12 @@ void UserphraseView::showModifyUserphraseDialog()
     UserphraseDialog_->setText(userphrase->phrase_, userphrase->bopomofo_);
     UserphraseDialog_->setWindowTitle(tr("Modify phrase"));
     emit UserphraseDialog_->exec();
+}
+
+void UserphraseView::showStatisticsphraseDialog()
+{
+    StatisticsDialog_->setWindowTitle(tr("Phrase statistic"));
+    emit StatisticsDialog_->exec();
 }
 
 void UserphraseView::addPhrase(int result)
@@ -126,3 +133,4 @@ void UserphraseView::setupAddUserphraseDialog()
         this, SLOT(addPhrase(int))
     );
 }
+

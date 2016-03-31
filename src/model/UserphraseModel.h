@@ -65,6 +65,7 @@ public slots:
     void importUserphrase(std::shared_ptr<UserphraseImporter> importer);
     void exportUserphrase(std::shared_ptr<UserphraseExporter> exporter);
     void remove(QModelIndexList indexList);
+    void statistics();
 
 private:
     void add(const QString &phrase, const QString &bopomofo);
