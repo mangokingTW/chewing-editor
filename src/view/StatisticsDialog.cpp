@@ -37,11 +37,6 @@ StatisticsDialog::~StatisticsDialog()
 void StatisticsDialog::setupConnect()
 {
     connect(
-        ui_.get()->buttonBox, SIGNAL(accepted()),
-        this, SLOT(setupChart())
-    );
-
-    connect(
         ui_.get()->buttonBox, SIGNAL(rejected()),
         this, SLOT(reject())
     );
@@ -49,17 +44,12 @@ void StatisticsDialog::setupConnect()
 
 void StatisticsDialog::plot(const Statistics* statistics)
 {
-QVector<QString> phrase_vec(statistics->phrase_vec);
+QVector<QString> phrase_vec;
 QVector<QString> bopomofo_vec(statistics->bopomofo_vec);
-QVector<double> orig_freq_vec;
-QVector<double> max_freq_vec;
-QVector<double> user_freq_vec;
 
-for(int i = 0 ; i < statistics->orig_freq_vec.size() ; i++)
+for( int i = 0 ; i < statistics->phrase_vec.size() ; i++ )
 {
-    orig_freq_vec << statistics->orig_freq_vec[i];
-    max_freq_vec << statistics->max_freq_vec[i];
-    user_freq_vec << statistics->user_freq_vec[i];
+    phrase_vec << "" << statistics->phrase_vec[i]+" ("+statistics->bopomofo_vec[i]+")" << "" << "";
 }
 
 QCustomPlot *customPlot = ui_->customPlot;
@@ -86,29 +76,34 @@ pen.setColor(QColor(150, 222, 0));
 user_freq_bar->setPen(pen);
 user_freq_bar->setBrush(QColor(150, 222, 0, 70));
 // stack bars ontop of each other:
-max_freq_bar->moveAbove(orig_freq_bar);
-user_freq_bar->moveAbove(max_freq_bar);
+//max_freq_bar->moveAbove(orig_freq_bar);
+//user_freq_bar->moveAbove(max_freq_bar);
  
 // prepare x axis with country labels:
 QVector<double> ticks;
 QVector<QString> labels;
 
-ticks << 1 << 2 << 3 << 4 << 5 << 6 << 7;
+for( int i = 1 ; i <= phrase_vec.size()*3 ; i++ )
+{
+    ticks << i;
+}
+
 //labels << "USA" << "Japan" << "Germany" << "France" << "UK" << "Italy" << "Canada";
 customPlot->xAxis->setAutoTicks(false);
 //customPlot->xAxis->setAutoTicks(true);
 customPlot->xAxis->setAutoTickLabels(false);
 customPlot->xAxis->setTickVector(ticks);
+customPlot->xAxis->setTickStep(9);
 //customPlot->xAxis->setTickVectorLabels(labels);
 customPlot->xAxis->setTickVectorLabels(phrase_vec);
 customPlot->xAxis->setTickLabelRotation(60);
-customPlot->xAxis->setSubTickCount(0);
-customPlot->xAxis->setTickLength(0, 4);
+//customPlot->xAxis->setSubTickCount(0);
+customPlot->xAxis->setTickLength(0, 1);
 customPlot->xAxis->grid()->setVisible(true);
-customPlot->xAxis->setRange(0, 8);
+customPlot->xAxis->setRange(0, 24);
  
 // prepare y axis:
-customPlot->yAxis->setRange(0, 10.5);
+customPlot->yAxis->setRange(0, *std::max_element(statistics->max_freq_vec.begin(), statistics->max_freq_vec.end()));
 customPlot->yAxis->setPadding(5); // a bit more space to the left border
 customPlot->yAxis->setLabel("Phrase frequency");
 customPlot->yAxis->grid()->setSubGridVisible(true);
@@ -119,9 +114,16 @@ customPlot->yAxis->grid()->setPen(gridPen);
 gridPen.setStyle(Qt::DotLine);
 customPlot->yAxis->grid()->setSubGridPen(gridPen);
  
-orig_freq_bar->setData(ticks, orig_freq_vec);
-max_freq_bar->setData(ticks, max_freq_vec);
-user_freq_bar->setData(ticks, user_freq_vec);
+//orig_freq_bar->setData(ticks, orig_freq_vec);
+//max_freq_bar->setData(ticks, max_freq_vec);
+//user_freq_bar->setData(ticks, user_freq_vec);
+for(int i = 0 ; i < statistics->orig_freq_vec.size() ; i++ )
+{
+    orig_freq_bar->addData(i*4+1,statistics->orig_freq_vec[i]);
+    max_freq_bar->addData(i*4+2,statistics->max_freq_vec[i]);
+    user_freq_bar->addData(i*4+3,statistics->user_freq_vec[i]);
+}
+
  
 // setup legend:
 customPlot->legend->setVisible(true);
